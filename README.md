@@ -23,8 +23,8 @@ The game also integrates a 2 player turn based system with a “computer” play
   - select cards from the board
   - “remember” the values of cards that have previously turned over
   - choose cards off the board based upon it’s knowledge of the board
-  
+
 ### Instructions
-You can [view the live version](https://nozbzh.github.io/card-matching/) or clone the repo. To run, simply open index.html in your favorite browser.
+You can [view the live version](https://nozbzh.github.io/card-matching/public/) or clone the repo. To run, simply open index.html in your favorite browser.
 
 Credit to [groove.co](http://www.groove.co/) for the instructions.
