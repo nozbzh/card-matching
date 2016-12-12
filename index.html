@@ -4,13 +4,16 @@
   <head>
 
     <meta charset="UTF-8">
-    <title>Memory</title>
+    <title>Matching pairs</title>
 
     <!-- Bootstrap -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- My css -->
     <link rel="stylesheet" href="stylesheets/application.css">
+
+    <!-- font-awesome -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
@@ -20,44 +23,52 @@
     <!-- Bootstrap JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-
-    <script src="javascript/memory.js"></script>
+    <!-- My JavaScript -->
+    <script src="javascript/board.js"></script>
+    <script src="javascript/card.js"></script>
+    <script src="javascript/gameplay.js"></script>
 
   </head>
 
   <body>
 
-    <h1>Find matching pairs!</h1>
+    <h1>Find pairs having the same value (ignoring suit)</h1>
 
-    <h2>
-      <a href="#" id="single-player">Play Single Player</a>
-      <br>
-      <a href="#" id="against-computer">Play Against the Computer</a>
-    </h2>
+    <div class="row">
+      <div class="col-md-9">
 
-    <h2 id="number-players"></h2>
-    <h3 id="current-player"></h3>
+        <table id="game-board"></table>
 
-    <table id="game-deck"></table>
+        <div id="score">
+          <div class="row">
 
-    <div id="score">
+            <div class="col-md-6">
+              <div id="player">
+                <div class="total"></div>
+                <div class="matched-pairs"></div>
+              </div>
+            </div>
 
-      <div class="row">
-
-        <div class="col-md-6">
-          <div id="player">
-            <div class="total"></div>
-            <div class="matched-pairs"></div>
+            <div class="col-md-6">
+              <div id="computer">
+                <div class="total"></div>
+                <div class="matched-pairs"></div>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="col-md-6">
-          <div id="computer">
-            <div class="total"></div>
-            <div class="matched-pairs"></div>
-          </div>
-        </div>
+      <div class="col-md-3">
+        <h2>
+          <a href="#" id="single-player"><i class="fa fa-user" aria-hidden="true"></i> Single Player</a>
+          <br>
+          <a href="#" id="against-computer"><i class="fa fa-desktop" aria-hidden="true"></i> Vs Computer</a>
+        </h2>
 
+        <h2 id="number-players"></h2>
+
+        <h3 id="current-player"></h3>
       </div>
 
     </div>
