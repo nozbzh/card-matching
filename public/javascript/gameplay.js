@@ -1,12 +1,44 @@
-// Create a board object. Called only once, on page load.
+// Page load function to initialize gameplay variables (turns, players, score)
+$(function() {
+  window.playerScore = 0;
+  window.computerScore = 0;
+
+  createBoard();
+
+  setNumberOfPlayers();
+
+  $('body').on('click', '#game-board .card.clickable', function() {
+    // prevent click unless it's player's turn and less than 2 visible cards
+    if ((window.board.cardsVisible.length < 2) && (window.turn !== 'com')){
+      clickCard($(this).parent().index(), $(this).index()); // row, col
+    }
+  });
+
+  $('body').on('click', '#play-again', function() {
+    window.location.reload();
+  });
+
+  // set session variable to initiate 2 player mode when user switches mode
+  $('body').on('click', '#against-computer', function() {
+    sessionStorage.setItem('vsCom', 'true');
+    window.location.reload();
+  });
+
+  // remove session variable to go back to default single player mode
+  $('body').on('click', '#single-player', function() {
+    sessionStorage.removeItem('vsCom');
+    window.location.reload();
+  });
+});
+
+// Create a board object
 function createBoard() {
   window.board = new Board(4, 13);
   createCards();
   window.board.placeCards();
 }
 
-// Create 52 card objects and saving them in the gameSetup global variable
-// Called only once, on page load
+// Create 52 card objects
 function createCards() {
   gameSetup = {};
   gameSetup.cards = [];
@@ -19,18 +51,17 @@ function createCards() {
   }
 }
 
-// Set the number of players based on session variable vsCom, set when user changes mode
-// Called only once, on page load. Default is single player
+// Set number of players based on session variable vsCom
 function setNumberOfPlayers(){
   var vsCom = sessionStorage.getItem('vsCom');
 
   if (vsCom == 'true'){
     window.turn = 'p';
-    $('#number-players').html('Currently playing Vs Computer');
+    $('#number-players').html('Currently playing <i class="fa fa-desktop" aria-hidden="true"></i> Vs Computer');
     $('#current-player').html('Your turn');
   } else {
     window.turn = 'single';
-    $('#number-players').html('Currently playing Single Player');
+    $('#number-players').html('Currently playing <i class="fa fa-user" aria-hidden="true"></i> Single Player');
   }
 
 }
@@ -43,8 +74,7 @@ function clickCard(row, col) {
   card.flip();
   window.board.cardsVisible.push(card); // add to visible cards (the ones the user sees on the board)
 
-  if ((window.turn == 'com') && (window.board.cardsVisible.length == 1) && (window.computerWillMatch)) {
-    // do nothing because second card is already set in computerPickMatchingPair
+  if ((window.computerWillMatch)) { // skip computerPlays when computer already has a matching pair
     window.computerWillMatch = false;
   } else if ((window.turn == 'com') && (window.board.cardsVisible.length == 1)) {
     computerPlays();
@@ -53,19 +83,19 @@ function clickCard(row, col) {
   // 2 visible cards means end of turn
   if (window.board.cardsVisible.length == 2) {
 
-    // setting timeout to leave some time for the user to see what the last card was
+    // timeout so user has time to see what the last card was
     setTimeout(function(){
 
-      if (compareCards()) { // compareCards returns true if both cards match
+      if (cardsMatch()) {
         updateScore(window.turn);
         window.board.removeCardsFromBoard();
         window.board.resetCardsVisible();
-        // computer plays again if it finds a match
-        if (window.turn == 'com') {
+
+        if (window.turn == 'com') { // computer plays again if it finds a match
           computerPlays();
         }
       } else {
-        // if the 2 cards don't match, turn them over and switch turn
+        // if no match, turn cards over and switch turn
         window.board.hideCards();
         switchTurn();
       }
@@ -74,9 +104,7 @@ function clickCard(row, col) {
 }
 
 function switchTurn(){
-  // first reset visible cards
   window.board.resetCardsVisible();
-  // only check for 'p' and 'com'. If turn is 'single', do nothing (and player keeps playing)
   if (window.turn == 'com'){
     window.turn = 'p';
     $('#current-player').html('Your turn');
@@ -87,18 +115,18 @@ function switchTurn(){
   }
 }
 
-// Set a timeout to let the user see what the computer chooses
 function computerPlays(){
+  // timeout so user has time to see computer's pick
   setTimeout(function(){
-    // if there is a match in known cards and computer is choosing its first card for the current turn
     if (window.board.computerCanMatch()){
-      var num = Math.floor(Math.random() * 10) + 1
-      // set probabilty that computer finds a match (5 is 50%, 3 is 30%)
-      if (num < 3) {
+      var num = Math.floor(Math.random() * 10)
+
+      if (num < 3) { // probabilty that computer finds a match (5 is 50%, 3 is 30%)
         computerPickMatchingPair();
       } else {
         computerPickRandomCard();
       }
+
     } else {
       computerPickRandomCard();
     }
@@ -107,8 +135,8 @@ function computerPlays(){
 
 function computerPickMatchingPair(){
   var [card1, card2] = window.board.pickMatch();
-  window.computerWillMatch = true; // set flag to skip computerPlays in
-  // the first clickCard call
+  // set flag to skip computerPlays in the first clickCard call
+  window.computerWillMatch = true;
 
   clickCard(card1.row, card1.col);
   clickCard(card2.row, card2.col);
@@ -119,8 +147,7 @@ function computerPickRandomCard(){
   clickCard(card.row, card.col);
 }
 
-// make sure the comparison isn't between the same card
-function compareCards(){
+function cardsMatch(){
   var card1 = window.board.cardsVisible[0];
   var card2 = window.board.cardsVisible[1];
   return (card1.value === card2.value) && (card1.suit !== card2.suit);
@@ -144,9 +171,11 @@ function updateScore(currentPlayer){
   // display game end message
   if (window.playerScore + window.computerScore == 26) {
     if (window.playerScore > window.computerScore){
-      var message = 'Game over. You win!'
+      var message = 'You win!'
+      $('#winning-gif').removeClass('hidden');
     } else {
-      var message = 'Game over. You lose.'
+      var message = 'Game over. You lose...'
+      $('#losing-gif').removeClass('hidden');
     }
 
     $('.game-end-title').html(message);
@@ -164,42 +193,4 @@ function addCardToScoreArea(card, currentPlayer) {
   $('#score ' + target + ' .matched-pairs').append('<div class="small-card" id="'+ card.id +'"></div>');
   $('#score ' + target + ' .matched-pairs .small-card#' + card.id).append('<img src="images/' + card.id + '.png" alt="'+ card.id +'" class="face-up">');
 }
-
-$(function() {
-  /* Page load function to initialize game play variables (turns, players, score)
-   * Input: (none)
-   * Output: (none)
-   */
-  window.playerScore = 0;
-  window.computerScore = 0;
-
-  createBoard();
-
-  setNumberOfPlayers();
-
-  $('body').on('click', '#game-board .card.clickable', function() {
-    // prevent click unless it's player's turn and less than 2 visible cards
-    if ((window.board.cardsVisible.length < 2) && (window.turn !== 'com')){
-      clickCard($(this).parent().index(), $(this).index()); // row, col
-    }
-  });
-
-  $('body').on('click', '#play-again', function() {
-    window.location.reload();
-  });
-
-  // When user switches game mode, remove session variable to go back to default
-  // single player mode
-  $('body').on('click', '#single-player', function() {
-    sessionStorage.removeItem('vsCom');
-    window.location.reload();
-  });
-
-  // When user switches game mode, set session variable to initiate 2 player mode
-  // vs computer
-  $('body').on('click', '#against-computer', function() {
-    sessionStorage.setItem('vsCom', 'true');
-    window.location.reload();
-  });
-});
 

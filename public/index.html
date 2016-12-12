@@ -31,8 +31,18 @@
   </head>
 
   <body>
-
-    <h1>Find pairs having the same value (ignoring suit)</h1>
+    <div class="row">
+      <div class="col-sm-10">
+        <h1>Find pairs having the same value (ignoring suit)</h1>
+      </div>
+      <div class="col-sm-2">
+        <p class="text-center">
+          <img src="https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAX9AAAAJGVhNzE5ODMxLWFiYzQtNGQyMy05YjRjLTE1MWY5YzFmZWM1MA.jpg" alt="profile noe" class="img-circle small-size">
+          <br>
+          <a href="https://www.linkedin.com/in/noestauffert" target="_blank">View Noe's LinkedIn</a>
+        </p>
+      </div>
+    </div>
 
     <div class="row">
       <div class="col-md-9">
@@ -82,7 +92,17 @@
             <button class='close' data-dismiss='modal' type='button'>×</button>
             <h4 class='game-end-title'></h4>
           </div>
-          <div class='modal-body'>
+          <div class='modal-body text-center'>
+            <div id="winning-gif" class="hidden">
+              <img src="images/win.gif" alt="you win">
+            </div>
+            <div id="losing-gif" class="hidden">
+              <img src="images/lose.gif" alt="you lose">
+            </div>
+            <br>
+            <p>
+              How about inviting Noe to an onsite?
+            </p>
             <a href="#" id="play-again">Play Again</a>
           </div>
           <div class='modal-footer'>

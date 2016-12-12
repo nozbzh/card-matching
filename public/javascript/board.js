@@ -19,7 +19,7 @@ Board.prototype.pickRandom = function() {
 
   cards = cards.filter(isNotNull);
 
-  if (cards.length > 0){
+  if (cards.length > 0){ // pick from unknownCards if any
     var index = Math.floor(Math.random() * cards.length);
     var card = cards[index];
   } else {
@@ -59,6 +59,7 @@ Board.prototype.pickMatch = function() {
   return matchingPair;
 }
 
+// determines if computer is allowed to pick a matching pair
 Board.prototype.computerCanMatch = function() {
   return (this.knownCards.length > 2) && (this.knownCardsMatch()) && (this.cardsVisible.length == 0);
 }
@@ -73,6 +74,7 @@ Board.prototype.hideCards = function() {
   }
 }
 
+// called when there is a match
 Board.prototype.removeCardsFromBoard = function() {
   for (var i = 0; i < this.cardsVisible.length; i++){
     this.cardsVisible[i].remove();
@@ -104,5 +106,6 @@ Board.prototype.placeCards = function() {
     }
   }
 
+  // copy entire board to unknown cards on page load
   this.unknownCards = jQuery.extend(true, [], this.cards);
 }

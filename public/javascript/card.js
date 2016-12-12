@@ -32,16 +32,17 @@ Card.prototype.removeFromUnknownCards = function() {
 Card.prototype.addToKnownCards = function() {
   if (window.board.knownCards.indexOf(this) == -1) {
     window.board.knownCards.push(this);
+    // increment count if value exists, else set to 1
     window.board.knownCardsValues[this.value] = window.board.knownCardsValues[this.value] + 1 || 1;
   }
 }
 
 Card.prototype.remove = function() {
   var card = $('#game-board #' + this.id);
-  window.board.cards[this.row][this.col] = null;
+  window.board.cards[this.row][this.col] = null; // remove from board object
   var index = window.board.knownCards.indexOf(this);
-  window.board.knownCards.splice(index, 1);
-  window.board.knownCardsValues[this.value]--;
+  window.board.knownCards.splice(index, 1); // remove from knownCards
+  window.board.knownCardsValues[this.value]--; // decrement count
   card.removeClass('card');
   card.html('');
   card.css('outline', 'none')
