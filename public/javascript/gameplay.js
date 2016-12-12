@@ -29,7 +29,15 @@ $(function() {
     sessionStorage.removeItem('vsCom');
     window.location.reload();
   });
+
+  // disable right click on cards
+  $('#game-board').bind('contextmenu', function() {
+    return false;
+  });
+
+  $('#game-board').disableTextSelect();
 });
+
 
 // Create a board object
 function createBoard() {
@@ -139,7 +147,9 @@ function computerPickMatchingPair(){
   window.computerWillMatch = true;
 
   clickCard(card1.row, card1.col);
-  clickCard(card2.row, card2.col);
+  setTimeout(function(){ // delay click on second card
+    clickCard(card2.row, card2.col);
+  }, 1000);
 }
 
 function computerPickRandomCard(){
@@ -194,3 +204,13 @@ function addCardToScoreArea(card, currentPlayer) {
   $('#score ' + target + ' .matched-pairs .small-card#' + card.id).append('<img src="images/' + card.id + '.png" alt="'+ card.id +'" class="face-up">');
 }
 
+jQuery.fn.disableTextSelect = function() {
+  return this.each(function() {
+    $(this).css({
+      'MozUserSelect':'none',
+      'webkitUserSelect':'none'
+    }).attr('unselectable','on').bind('selectstart', function() {
+      return false;
+    });
+  });
+};
