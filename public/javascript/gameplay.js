@@ -57,11 +57,11 @@ function setNumberOfPlayers(){
 
   if (vsCom == 'true'){
     window.turn = 'p';
-    $('#number-players').html('Currently playing <i class="fa fa-desktop" aria-hidden="true"></i> Vs Computer');
+    $('#number-players').html('Currently playing Vs Computer <i class="fa fa-desktop" aria-hidden="true"></i>');
     $('#current-player').html('Your turn');
   } else {
     window.turn = 'single';
-    $('#number-players').html('Currently playing <i class="fa fa-user" aria-hidden="true"></i> Single Player');
+    $('#number-players').html('Currently playing Single Player <i class="fa fa-user" aria-hidden="true"></i>');
   }
 
 }
